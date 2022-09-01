@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JaveExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TourGuide</a> &gt; <a href="index.source.html" class="el_package">tourGuide.tracker</a> &gt; <span class="el_source">JaveExecutor.java</span></div><h1>JaveExecutor.java</h1><pre class="source lang-java linenums">package tourGuide.tracker;
+
+import java.util.concurrent.*;
+
+<span class="nc" id="L5">public class JaveExecutor {</span>
+
+    public static void main(String[] args) throws InterruptedException {
+
+<span class="nc" id="L9">        ExecutorService executorService = new ThreadPoolExecutor(2, 4, 60,</span>
+                TimeUnit.SECONDS, new LinkedBlockingQueue&lt;Runnable&gt;());
+
+<span class="nc bnc" id="L12" title="All 2 branches missed.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="nc" id="L13">            executorService.submit(new Runnable() {</span>
+                @Override
+                public void run() {
+<span class="nc" id="L16">                    System.out.println(&quot;debut tache &quot; + Thread.currentThread().getName());</span>
+                    try {
+<span class="nc" id="L18">                        Thread.sleep(1000);</span>
+<span class="nc" id="L19">                    } catch (InterruptedException e) {</span>
+<span class="nc" id="L20">                        e.printStackTrace();</span>
+<span class="nc" id="L21">                    }</span>
+<span class="nc" id="L22">                    System.out.println(&quot;fin tache&quot;);</span>
+<span class="nc" id="L23">                }</span>
+            });
+        }
+
+<span class="nc" id="L27">        System.out.println(&quot;Autre traitement&quot;);</span>
+
+<span class="nc" id="L29">        executorService.shutdown();</span>
+<span class="nc" id="L30">        executorService.awaitTermination(300, TimeUnit.SECONDS);</span>
+
+<span class="nc" id="L32">        System.out.println(&quot;Fin thread principal&quot;);</span>
+<span class="nc" id="L33">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
