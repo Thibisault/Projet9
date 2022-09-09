@@ -1,0 +1,25 @@
+
+t
+java:S2293!"YReplace the type specification in this constructor call with the diamond operator ("<>").( ùÌŸþÿÿÿÿ
+s	java:S1357"YReduce the total number of break and continue statements in this loop to use at most one.(˜ïˆžÿÿÿÿÿ
+r
+java:S26296"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(àÄÝŽ
+w
+java:S2629>"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(Õ¶³‡ÿÿÿÿÿ
+r
+java:S2629F"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(ô¶Íž
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ƒþ¢
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(šó˜Øøÿÿÿÿ
+Y
+java:S3416">Update this logger to use "TrackerHighVolumeGetRewards.class".(åÉªƒùÿÿÿÿ
+0
+java:S2438'""this" is a "Thread".(™Ýƒ’øÿÿÿÿ
+W
+java:S34576"AFormat specifiers should be used instead of string concatenation.(àÄÝŽ
+\
+java:S3457>"AFormat specifiers should be used instead of string concatenation.(Õ¶³‡ÿÿÿÿÿ
+c
+java:S1612C"MReplace this lambda with method reference 'rewardsService::calculateRewards'.(¯ñò‰
+W
+java:S3457F"AFormat specifiers should be used instead of string concatenation.(ô¶Íž
+V	java:S125J"<This block of commented-out lines of code should be removed.(¡»¢üùÿÿÿÿ

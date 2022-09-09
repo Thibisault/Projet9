@@ -1,0 +1,40 @@
+
+t
+java:S2293d"YReplace the type specification in this constructor call with the diamond operator ("<>").(ñã¤ýÿÿÿÿ
+‚
+java:S1488:"gImmediately return this expression instead of assigning it to the temporary variable "visitedLocation".(î§Èÿþÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(—ìÉûÿÿÿÿ
+p	java:S115•"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ïšä
+Y
+java:S1155:">Use isEmpty() to check whether the collection is empty or not.(î§Èÿþÿÿÿÿ
+c
+java:S1612O"HReplace this lambda with method reference 'UserReward::getRewardPoints'.(ÎŽùôÿÿÿÿÿ
+X	java:S125X"<This block of commented-out lines of code should be removed.(û¦‘ô8Ý»éª¯0
+V	java:S125["<This block of commented-out lines of code should be removed.(‡Ÿóüøÿÿÿÿ
+V	java:S125]"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ
+Q
+java:S1161Š":Add the "@Override" annotation above this method signature(“–ýþ
+]
+java:S3457¤"AFormat specifiers should be used instead of string concatenation.(É°™˜øÿÿÿÿ
+C
+java:S1602¨",Remove useless curly braces around statement(ßê™è
+:
+java:S2119±"Save and re-use this "Random".(õ–®Šýÿÿÿÿ
+:
+java:S2119²"Save and re-use this "Random".(ä»Ùÿÿÿÿÿ
+5
+java:S2119³"Save and re-use this "Random".(•Þ‚ƒ
+4
+java:S2119´"Save and re-use this "Random".(Ñ‹›w
+:
+java:S2119µ"Save and re-use this "Random".(’Úò™þÿÿÿÿ
+:
+java:S2119·"Save and re-use this "Random".(ˆªÓüÿÿÿÿ
+5
+java:S2119¾"Save and re-use this "Random".(éÖÃì
+5
+java:S2119Ä"Save and re-use this "Random".(éÖÃì
+:
+java:S2119È"Save and re-use this "Random".(—íø–þÿÿÿÿ
+X
+java:S1128";Remove this unused import 'com.jsoniter.output.JsonStream'.(‰ž£8ÿúÃª¯0
