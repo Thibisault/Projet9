@@ -27,9 +27,11 @@ public class RewardsService {
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
 
+
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsCentral = rewardCentral;
+
 	}
 	
 	public void setProximityBuffer(int proximityBuffer) {
@@ -44,6 +46,9 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
+		List<UserReward> userRewardList = new ArrayList<>();
+
+		//logger.info("userId : " + user.getUserName() + " rewards size before : "+user.getUserRewards().size());
 
 		synchronized (userLocations) {
 			for (VisitedLocation visitedLocation : userLocations) {
@@ -56,6 +61,7 @@ public class RewardsService {
 				}
 			}
 		}
+		//logger.info("userId : " + user.getUserName() + " rewards size after: "+user.getUserRewards().size());
 	}
 
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {

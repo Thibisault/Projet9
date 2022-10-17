@@ -1,4 +1,4 @@
-package tourGuide.tracker;
+package tourGuide.helper;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -15,14 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
+import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
 
 @Data
 public class TrackerHighVolumeGetRewards extends Thread {
     private final Logger logger = LoggerFactory.getLogger(Tracker.class);
     private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private final TourGuideService tourGuideService;
+    //private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final RewardsService rewardsService;
     private boolean stop = false;
     private List<User> userTreatement = new ArrayList<>();
@@ -33,10 +33,9 @@ public class TrackerHighVolumeGetRewards extends Thread {
         this.userTreatement.addAll(new ArrayList<User>(sublistUserTreatement));
     }
 
-    public TrackerHighVolumeGetRewards(TourGuideService tourGuideService, RewardsService rewardsService) {
-        this.tourGuideService = tourGuideService;
+    public TrackerHighVolumeGetRewards(RewardsService rewardsService) {
         this.rewardsService = rewardsService;
-        executorService.submit(this);
+        //executorService.submit(this);
     }
 
     /**
@@ -45,7 +44,7 @@ public class TrackerHighVolumeGetRewards extends Thread {
     public void stopTracking() {
         logger.debug("Tracker stopping (0)");
         stop = true;
-        executorService.shutdownNow();
+        //executorService.shutdownNow();
     }
 
     @Override
@@ -60,25 +59,15 @@ public class TrackerHighVolumeGetRewards extends Thread {
 
 
             logger.debug("Begin Tracker. Tracking " + userTreatement.size() + " users.");
-            stopWatch.start();
             Attraction attraction = gpsUtil.getAttractions().get(0);
             userTreatement.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
-
+            stopWatch.start();
             userTreatement.forEach(u -> rewardsService.calculateRewards(u));
-
             stopWatch.stop();
+
             logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
             stopWatch.reset();
             break;
-			/*
-			try {
-				logger.debug("Tracker sleeping");
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);
-			} catch (InterruptedException e) {
-				logger.debug("Tracker stopping (2)");
-				break;
-			}
-			 */
         }
     }
 }

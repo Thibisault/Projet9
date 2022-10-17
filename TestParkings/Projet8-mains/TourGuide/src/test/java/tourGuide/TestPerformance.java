@@ -14,7 +14,8 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.tracker.Tracker;
-import tourGuide.tracker.TrackerHighVolumeGetRewards;
+import tourGuide.helper.TrackerHighVolumeGetRewards;
+import tourGuide.helper.TrackerHighVolumeTrackLocation;
 import tourGuide.user.User;
 
 import org.slf4j.Logger;
@@ -22,14 +23,16 @@ import org.slf4j.LoggerFactory;
 
 public class TestPerformance {
 	private final Logger logger = LoggerFactory.getLogger(Tracker.class);
-	static final int numberTotalOfThreads = 40;
-	static final int internalUserNumber = 100000;
+	static int numberTotalOfThreads = 1000;
+	static final int internalUserNumber = 100;
+	static int userInterval = internalUserNumber / numberTotalOfThreads;
+
 
 	/*
 	 * A note on performance improvements:
 	 *     
 	 *     The number of users generated for the high volume tests can be easily adjusted via this method:
-	 *     
+	 *
 	 *     		InternalTestHelper.setInternalUserNumber(100000);
 	 *     
 	 *     
@@ -38,34 +41,34 @@ public class TestPerformance {
 	 * 
 	 *     These are performance metrics that we are trying to hit:
 	 *     
-	 *     highVolumeTrackLocation: 100,000 users within 15 minutes:
-	 *     		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
-     *
-     *     highVolumeGetRewards: 100,000 users within 20 minutes:
+	 *     highVolumeTrackLocation:.00 users within 20 minutes:
 	 *          assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 	
 	@Test
 	public void highVolumeTrackLocation() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
+
+		if (userInterval == 0){
+			userInterval++;
+		}
+		if (numberTotalOfThreads > internalUserNumber){
+			numberTotalOfThreads = internalUserNumber;
+		}
+
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(internalUserNumber);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
-		List<Tracker> numberThreads = new ArrayList<>(numberTotalOfThreads);
+		List<TrackerHighVolumeTrackLocation> tableTrackerHighVolumeTrackLocation = new ArrayList<>(numberTotalOfThreads);
 		System.out.println("Début boucle new");
 		for (int i = 0; i < numberTotalOfThreads; i ++) {
-			Tracker tracker = new Tracker(tourGuideService);
-			tracker.setName("Thibault-" + i);
-			numberThreads.add(tracker);
+			TrackerHighVolumeTrackLocation trackerHighVolumeTrackLocation = new TrackerHighVolumeTrackLocation(tourGuideService);
+			trackerHighVolumeTrackLocation.setName("Thibault-" + i);
+			tableTrackerHighVolumeTrackLocation.add(trackerHighVolumeTrackLocation);
 		}
-		logger.info("Nombre de thread = "+ numberThreads.size());
-
-		int userInterval = internalUserNumber / numberTotalOfThreads;
-		if (internalUserNumber % numberTotalOfThreads != 0) {
-			userInterval++;
-		}
+		logger.info("Nombre de thread = "+ tableTrackerHighVolumeTrackLocation.size());
 
 		List<User> allUsers = Collections.synchronizedList(tourGuideService.getAllUsers());
 		int b = 1;
@@ -80,27 +83,36 @@ public class TestPerformance {
 
 		int threadIdx = 0;
 		int tailleListe = 0;
-		int threadNb = 0;
+		int firstUser = 0;
+		int modulo = internalUserNumber % numberTotalOfThreads;
+		System.out.println("Modulo : "+modulo);
+		for (TrackerHighVolumeTrackLocation trackerHighVolumeTrackLocation : tableTrackerHighVolumeTrackLocation) {
+			if (threadIdx < modulo){
+				System.out.println("Nombre de passage avant modulo : "+threadIdx);
+				trackerHighVolumeTrackLocation.setUserTreatement(allUsers.subList(firstUser, userInterval + firstUser +1));
+				trackerHighVolumeTrackLocation.start();
+				firstUser = firstUser + userInterval +1;
+				tailleListe = tailleListe + tableTrackerHighVolumeTrackLocation.get(threadIdx++).getUserTreatement().size();
 
-		for (Tracker numberTrack : numberThreads) {
-			if (threadIdx == numberTotalOfThreads - 1){
-				numberTrack.setUserTreatement(allUsers.subList(threadNb, allUsers.size()));
-			}else {
-				numberTrack.setUserTreatement(allUsers.subList(threadNb, userInterval + threadNb));
+				for (User user : trackerHighVolumeTrackLocation.getUserTreatement()) {
+					logger.info(user.getName());
+				}
+			} else {
+				System.out.println("Nombre de passage après modulo : "+threadIdx);
+				trackerHighVolumeTrackLocation.setUserTreatement(allUsers.subList(firstUser, userInterval + firstUser));
+				trackerHighVolumeTrackLocation.start();
+				firstUser = firstUser + userInterval;
+				tailleListe = tailleListe + tableTrackerHighVolumeTrackLocation.get(threadIdx++).getUserTreatement().size();
+				for (User user : trackerHighVolumeTrackLocation.getUserTreatement()) {
+					logger.info(user.getName());
+				}
 			}
-
-			for (User user : numberTrack.getUserTreatement()) {
-				logger.info(user.getName());
-			}
-			numberTrack.start();
-			threadNb = threadNb + userInterval;
-			tailleListe = tailleListe + numberThreads.get(threadIdx++).getUserTreatement().size();
 		}
 
 		logger.info("Début boucle join");
-		for (int i =0; i < numberThreads.size(); i++){
+		for (int i =0; i < tableTrackerHighVolumeTrackLocation.size(); i++){
 			logger.info("Attente fin thread " + i);
-			numberThreads.get(i).join();
+			tableTrackerHighVolumeTrackLocation.get(i).join();
 		}
 
 		stopWatch.stop();
@@ -114,27 +126,30 @@ public class TestPerformance {
 	@Test
 	public void highVolumeGetRewards() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+
+		if (userInterval == 0){
+			userInterval++;
+		}
+		if (numberTotalOfThreads > internalUserNumber){
+			numberTotalOfThreads = internalUserNumber;
+		}
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(internalUserNumber);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
-		List<TrackerHighVolumeGetRewards> numberThreads = new ArrayList<>(numberTotalOfThreads);
+		List<TrackerHighVolumeGetRewards> tableTrackerHighVolumeGetRewards = new ArrayList<>(numberTotalOfThreads);
 		System.out.println("Début boucle new");
 		for (int i = 0; i < numberTotalOfThreads; i ++) {
-			TrackerHighVolumeGetRewards trackerHighVolumeGetRewards = new TrackerHighVolumeGetRewards(tourGuideService, rewardsService);
+			TrackerHighVolumeGetRewards trackerHighVolumeGetRewards = new TrackerHighVolumeGetRewards(rewardsService);
 			trackerHighVolumeGetRewards.setName("Thibault-" + i);
-			numberThreads.add(trackerHighVolumeGetRewards);
+			tableTrackerHighVolumeGetRewards.add(trackerHighVolumeGetRewards);
 		}
-		logger.info("Nombre de thread = "+ numberThreads.size());
+		logger.info("Nombre de thread = "+ tableTrackerHighVolumeGetRewards.size());
 
-		int userInterval = internalUserNumber / numberTotalOfThreads;
-		if (internalUserNumber % numberTotalOfThreads != 0) {
-			userInterval++;
-		}
 
 		List<User> allUsers = Collections.synchronizedList(tourGuideService.getAllUsers());
 		int b = 1;
@@ -145,27 +160,36 @@ public class TestPerformance {
 
 		int threadIdx = 0;
 		int tailleListe = 0;
-		int threadNb = 0;
+		int firstUser = 0;
+		int modulo = internalUserNumber % numberTotalOfThreads;
+		System.out.println("Modulo : "+modulo);
+		for (TrackerHighVolumeGetRewards trackerHighVolumeGetRewards : tableTrackerHighVolumeGetRewards) {
+			if (threadIdx < modulo){
+				System.out.println("Nombre de passage avant modulo : "+threadIdx);
+				trackerHighVolumeGetRewards.setUserTreatement(allUsers.subList(firstUser, userInterval + firstUser +1));
+				trackerHighVolumeGetRewards.start();
+				firstUser = firstUser + userInterval +1;
+				tailleListe = tailleListe + tableTrackerHighVolumeGetRewards.get(threadIdx++).getUserTreatement().size();
 
-		for (TrackerHighVolumeGetRewards trackerHighVolumeGetRewards : numberThreads) {
-			if (threadIdx == numberTotalOfThreads - 1){
-				trackerHighVolumeGetRewards.setUserTreatement(allUsers.subList(threadNb, allUsers.size()));
-			}else {
-				trackerHighVolumeGetRewards.setUserTreatement(allUsers.subList(threadNb, userInterval + threadNb));
+				for (User user : trackerHighVolumeGetRewards.getUserTreatement()) {
+					logger.info(user.getName());
+				}
+			} else {
+				System.out.println("Nombre de passage après modulo : "+threadIdx);
+				trackerHighVolumeGetRewards.setUserTreatement(allUsers.subList(firstUser, userInterval + firstUser));
+				trackerHighVolumeGetRewards.start();
+				firstUser = firstUser + userInterval;
+				tailleListe = tailleListe + tableTrackerHighVolumeGetRewards.get(threadIdx++).getUserTreatement().size();
+				for (User user : trackerHighVolumeGetRewards.getUserTreatement()) {
+					logger.info(user.getName());
+				}
 			}
-
-			for (User user : trackerHighVolumeGetRewards.getUserTreatement()) {
-				logger.info(user.getName());
-			}
-			trackerHighVolumeGetRewards.start();
-			threadNb = threadNb + userInterval;
-			tailleListe = tailleListe + numberThreads.get(threadIdx++).getUserTreatement().size();
 		}
 
 		logger.info("Début boucle join");
-		for (int i =0; i < numberThreads.size(); i++){
+		for (int i =0; i < tableTrackerHighVolumeGetRewards.size(); i++){
 			logger.info("Attente fin thread " + i);
-			numberThreads.get(i).join();
+			tableTrackerHighVolumeGetRewards.get(i).join();
 		}
 
 		for(User user : allUsers) {

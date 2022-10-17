@@ -46,8 +46,8 @@ public class TourGuideService {
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
-		tracker = new Tracker(this);
-		addShutDownHook();
+			tracker = new Tracker(this);
+			addShutDownHook();
 	}
 	
 	public List<UserReward> getUserRewards(User user) {
@@ -85,12 +85,9 @@ public class TourGuideService {
 
 	//synchronized pour éviter le bug de concurrence quand je lance le test de performance de localisation
 	public VisitedLocation trackUserLocation(User user) {
-		//logger.info("Nom User : " + user.getUserId());
 		Locale.setDefault(Locale.US);
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		// synchronized (user.getVisitedLocations()) {
-			user.addToVisitedLocations(visitedLocation);
-		// }
+		user.addToVisitedLocations(visitedLocation);
 		rewardsService.calculateRewards(user);
 		return visitedLocation;
 	}

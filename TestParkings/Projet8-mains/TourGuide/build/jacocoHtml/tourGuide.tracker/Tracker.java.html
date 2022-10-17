@@ -20,59 +20,53 @@ import tourGuide.user.User;
 public class Tracker extends Thread {
 <span class="pc" id="L21">	private final Logger logger = LoggerFactory.getLogger(Tracker.class);</span>
 <span class="fc" id="L22">	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);</span>
-	//private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(1);
-<span class="pc" id="L24">	private final ExecutorService executorService = Executors.newSingleThreadExecutor();</span>
-<span class="nc" id="L25">	private final TourGuideService tourGuideService;</span>
-<span class="pc" id="L26">	private boolean stop = false;</span>
-<span class="fc" id="L27">	private List&lt;User&gt; userTreatement = new ArrayList&lt;&gt;();</span>
+<span class="pc" id="L23">	private final ExecutorService executorService = Executors.newSingleThreadExecutor();</span>
+<span class="nc" id="L24">	private final TourGuideService tourGuideService;</span>
+<span class="pc" id="L25">	private boolean stop = false;</span>
+<span class="pc" id="L26">	private List&lt;User&gt; userTreatement = new ArrayList&lt;&gt;();</span>
 
 	public void setUserTreatement(List&lt;User&gt; sublistUserTreatement) {
-<span class="fc" id="L30">		this.userTreatement.addAll(new ArrayList&lt;User&gt;(sublistUserTreatement));</span>
-<span class="fc" id="L31">	}</span>
+<span class="nc" id="L29">		this.userTreatement.addAll(new ArrayList&lt;User&gt;(sublistUserTreatement));</span>
+<span class="nc" id="L30">	}</span>
 
-<span class="fc" id="L33">	public Tracker(TourGuideService tourGuideService) {</span>
-<span class="fc" id="L34">		this.tourGuideService = tourGuideService;</span>
-
-<span class="fc" id="L36">		executorService.submit(this);</span>
-<span class="fc" id="L37">	}</span>
+<span class="fc" id="L32">	public Tracker(TourGuideService tourGuideService) {</span>
+<span class="fc" id="L33">		this.tourGuideService = tourGuideService;</span>
+<span class="fc" id="L34">		executorService.submit(this);</span>
+<span class="fc" id="L35">	}</span>
 	
 	/**
 	 * Assures to shut down the Tracker thread
 	 */
 	public void stopTracking() {
-<span class="fc" id="L43">		logger.debug(&quot;Tracker stopping (0)&quot;);</span>
-<span class="fc" id="L44">		stop = true;</span>
-<span class="fc" id="L45">		executorService.shutdownNow();</span>
-<span class="fc" id="L46">	}</span>
+<span class="fc" id="L41">		logger.debug(&quot;Tracker stopping (0)&quot;);</span>
+<span class="fc" id="L42">		stop = true;</span>
+<span class="fc" id="L43">		executorService.shutdownNow();</span>
+<span class="fc" id="L44">	}</span>
 	
 	@Override
 	public void run() {
-<span class="fc" id="L50">		StopWatch stopWatch = new StopWatch();</span>
-<span class="fc" id="L51">		logger.info(&quot;Nombre de User dans la liste = &quot; +userTreatement.size());</span>
+<span class="fc" id="L48">		StopWatch stopWatch = new StopWatch();</span>
+<span class="fc" id="L49">		logger.info(&quot;Nombre de User dans la liste = &quot; +userTreatement.size());</span>
 		while(true) {
-<span class="pc bpc" id="L53" title="2 of 4 branches missed.">			if (Thread.currentThread().isInterrupted() || stop) {</span>
-<span class="nc" id="L54">				logger.debug(&quot;Tracker stopping (1)&quot;);</span>
-<span class="nc" id="L55">				break;</span>
+<span class="pc bpc" id="L51" title="1 of 4 branches missed.">			if (Thread.currentThread().isInterrupted() || stop) {</span>
+<span class="fc" id="L52">				logger.debug(&quot;Tracker stopping (1)&quot;);</span>
+<span class="fc" id="L53">				break;</span>
 			}
 
-
-<span class="fc" id="L59">			logger.debug(&quot;Begin Tracker. Tracking &quot; + userTreatement.size() + &quot; users.&quot;);</span>
-<span class="fc" id="L60">			stopWatch.start();</span>
-<span class="fc" id="L61">			userTreatement.forEach(u -&gt; tourGuideService.trackUserLocation(u));</span>
-<span class="fc" id="L62">			stopWatch.stop();</span>
-<span class="fc" id="L63">			logger.debug(&quot;Tracker Time Elapsed: &quot; + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + &quot; seconds.&quot;);</span>
-<span class="fc" id="L64">			stopWatch.reset();</span>
-			break;
-			/*
+<span class="fc" id="L56">			logger.debug(&quot;Begin Tracker. Tracking &quot; + userTreatement.size() + &quot; users.&quot;);</span>
+<span class="fc" id="L57">			stopWatch.start();</span>
+<span class="pc" id="L58">			userTreatement.forEach(u -&gt; tourGuideService.trackUserLocation(u));</span>
+<span class="fc" id="L59">			stopWatch.stop();</span>
+<span class="fc" id="L60">			logger.debug(&quot;Tracker Time Elapsed: &quot; + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + &quot; seconds.&quot;);</span>
+<span class="fc" id="L61">			stopWatch.reset();</span>
 			try {
-				logger.debug(&quot;Tracker sleeping&quot;);
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);
-			} catch (InterruptedException e) {
-				logger.debug(&quot;Tracker stopping (2)&quot;);
-				break;
-			}
-			 */
+<span class="fc" id="L63">				logger.debug(&quot;Tracker sleeping&quot;);</span>
+<span class="nc" id="L64">				TimeUnit.SECONDS.sleep(trackingPollingInterval);</span>
+<span class="fc" id="L65">			} catch (InterruptedException e) {</span>
+<span class="fc" id="L66">				logger.debug(&quot;Tracker stopping (2)&quot;);</span>
+<span class="fc" id="L67">				break;</span>
+<span class="nc" id="L68">			}</span>
 		}
-<span class="fc" id="L76">	}</span>
+<span class="fc" id="L70">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

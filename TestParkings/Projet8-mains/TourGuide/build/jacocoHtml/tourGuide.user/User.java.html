@@ -6,7 +6,7 @@ import gpsUtil.location.VisitedLocation;
 import lombok.Data;
 import tripPricer.Provider;
 
-<span class="pc bnc" id="L9" title="All 86 branches missed.">@Data</span>
+<span class="pc bpc" id="L9" title="80 of 86 branches missed.">@Data</span>
 public class User {
 	private final UUID userId;
 	private final String userName;
@@ -82,7 +82,7 @@ public class User {
 
 	//J'ai enlevÃ© le nÃ©gation et rajoutÃ© .attractionName
 	public void addUserReward(UserReward userReward) {
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">		if(userRewards.stream().filter(r -&gt; r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">		if(userRewards.stream().filter(r -&gt; r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {</span>
 <span class="fc" id="L86">			userRewards.add(userReward);</span>
 		}
 <span class="fc" id="L88">	}</span>
@@ -104,8 +104,8 @@ public class User {
 	}
 	
 	public void setTripDeals(List&lt;Provider&gt; tripDeals) {
-<span class="nc" id="L107">		this.tripDeals = tripDeals;</span>
-<span class="nc" id="L108">	}</span>
+<span class="fc" id="L107">		this.tripDeals = tripDeals;</span>
+<span class="fc" id="L108">	}</span>
 	
 	public List&lt;Provider&gt; getTripDeals() {
 <span class="fc" id="L111">		return tripDeals;</span>
