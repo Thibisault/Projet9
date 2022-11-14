@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>Update note</title>
+  <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+
+<div class="container text-center my-5">
+
+  <div class="row">
+    <div class="col-6">
+      <div th:object="${patient}">
+        <a th:href="@{/note/notePatient/{id}(id=${patient.idPatient})}">Note list</a>&nbsp;|&nbsp;
+        <a href="/patient/allPatientList">Patients list</a>&nbsp;|&nbsp;
+      </div>
+    </div>
+  </div>
+
+  <div class="row offset-md-5">
+    <h2>Update note patient</h2>
+  </div>
+
+  <div class="row">
+    <form action="#" th:action="@{/note/updateNote/{id}(id=${updateNote.idNote})}" th:object="${updateNote}" method="post" class="form-horizontal" style="width: 100%">
+
+      <div class="form-group">
+        <label for="takeNote" class="col control-label">takeNote</label>
+        <div class="col">
+          <input type="text" th:field="*{takeNote}" id="takeNote" placeholder="takeNote" class="col-4">
+          <p class="text-danger" th:if="${#fields.hasErrors('takeNote')}" th:errors="*{takeNote}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col">
+          <div th:object="${patient}">
+            <a class="btn btn-danger btn-sm" th:href="@{/note/notePatient/{id}(id=${patient.idPatient})}">Cancel</a>
+            <input class="btn btn-primary btn-sm" type="submit" value="Upadte note patient">
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+</body>
+</html>
