@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>Update patient</title>
+  <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+
+<div class="container text-center my-5">
+
+  <div class="row">
+    <div class="col-6">
+      <a href="/patient/addPatient">Add new patient</a>&nbsp;|&nbsp;
+      <a href="/patient/allPatientList">Patients list</a>&nbsp;|&nbsp;
+    </div>
+  </div>
+
+  <div class="row offset-md-5">
+    <h2>Update patient</h2>
+  </div>
+
+  <div class="row">
+    <form action="#" th:action="@{/patient/updatePatient/{id}(id=${updatePatient.idPatient})}" th:object="${updatePatient}" method="post" class="form-horizontal" style="width: 100%">
+
+      <div class="form-group">
+        <label for="firstName" class="col control-label">firstName</label>
+        <div class="col">
+          <input type="text" th:field="*{firstName}" id="firstName" placeholder="firstName" class="col-4">
+          <p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName" class="col control-label">lastName</label>
+        <div class="col">
+          <input type="text" th:field="*{lastName}" id="lastName" placeholder="lastName" class="col-4">
+          <p class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="age" class="col control-label">age</label>
+        <div class="col">
+          <input type="number" step="any" th:field="*{age}" id="age" placeholder="age" class="col-4">
+          <p class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address" class="col control-label">address</label>
+        <div class="col">
+          <input type="text" th:field="*{address}" id="address" placeholder="address" class="col-4">
+          <p class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="sexe" class="col control-label">sexe</label>
+        <div class="col">
+          <select type="text" th:field="*{sexe}" id="sexe" placeholder="sexe" class="col-4">
+            <option th:value="'MALE'" th:text="Male"></option>
+            <option th:value="'FEMALE'" th:text="Female"></option>
+          </select>
+          <p class="text-danger" th:if="${#fields.hasErrors('sexe')}" th:errors="*{sexe}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber" class="col control-label">phoneNumber</label>
+        <div class="col">
+          <input type="number" th:field="*{phoneNumber}" id="phoneNumber" placeholder="phoneNumber" class="col-4">
+          <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="risk" class="col control-label">risk</label>
+        <div class="col">
+          <select type="text" th:field="*{risk}" id="risk" placeholder="risk" class="col-4">
+            <option th:value="'NONE'" th:text="None"></option>
+            <option th:value="'BORDERLINE'" th:text="Borderline"></option>
+            <option th:value="'INDANGER'" th:text="InDanger"></option>
+            <option th:value="'EARLYONSET'" th:text="EarlyOnSet"></option>
+          </select>
+          <p class="text-danger" th:if="${#fields.hasErrors('risk')}" th:errors="*{risk}"></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col">
+          <a class="btn btn-danger btn-sm" href="/patient/allPatientList">Cancel</a>
+          <input class="btn btn-primary btn-sm" type="submit" value="Update patient">
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+</body>
+</html>

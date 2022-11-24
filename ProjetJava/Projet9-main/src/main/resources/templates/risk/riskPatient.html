@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>All risks</title>
+  <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+
+<div class="container offset-md-1 col-10">
+  <div class="row">
+    <div class="col-6">
+      <a href="/patient/allPatientList">Patient list</a>&nbsp;|&nbsp;
+    </div>
+  </div>
+
+  <div th:object="${patient}" class="row">
+    <h2 th:text="${patient.firstName}"></h2>
+    <h2>&nbsp;|&nbsp;</h2>
+    <h2 th:text="${patient.lastName}"></h2>
+    <h2>&nbsp;|&nbsp;</h2>
+    <h2 th:text="${patient.risk}"></h2>
+  </div>
+  <div class="row">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>All terminology risk</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="patients : ${patient}">
+        <td style="width: 10%" th:text="${patients.terminologyList}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

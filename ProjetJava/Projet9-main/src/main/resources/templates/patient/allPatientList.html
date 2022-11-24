@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>All patients</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+
+<div class="container offset-md-1 col-10">
+    <div class="row">
+        <div class="col-6">
+            <a href="/patient/addPatient">Add new patient</a>&nbsp;|&nbsp;
+        </div>
+    </div>
+
+    <div class="row"><h2>Patient list</h2></div>
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>idPatient</th>
+                <th>firstName</th>
+                <th>lastName</th>
+                <th>age</th>
+                <th>address</th>
+                <th>sexe</th>
+                <th>phoneNumber</th>
+                <th>risk</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="allPatients : ${allPatient}">
+                <td style="width: 10%" th:text="${allPatients.idPatient}"></td>
+                <td style="width: 10%" th:text="${allPatients.firstName}"></td>
+                <td style="width: 10%" th:text="${allPatients.lastName}"></td>
+                <td style="width: 10%" th:text="${allPatients.age}"></td>
+                <td style="width: 10%" th:text="${allPatients.address}"></td>
+                <td style="width: 10%" th:text="${allPatients.sexe}"></td>
+                <td style="width: 10%" th:text="${allPatients.phoneNumber}"></td>
+                <td style="width: 10%" th:text="${allPatients.risk}"></td>
+
+                <td style="width: 15%" class="text-center">
+                    <a th:href="@{/note/notePatient/{id}(id=${allPatients.idPatient})}">Notes&nbsp;|&nbsp;</a>
+                    <a th:href="@{/risk/riskPatient/{id}(id=${allPatients.idPatient})}">risk&nbsp;|&nbsp;</a>
+                    <a th:href="@{/patient/updatePatient/{id}(id=${allPatients.idPatient})}">Edit&nbsp;|&nbsp;</a>
+                    <a th:href="@{/patient/delete/{id}(id=${allPatients.idPatient})}">Delete</a>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
